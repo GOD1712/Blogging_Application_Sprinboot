@@ -26,7 +26,6 @@ public class UserDto {
 	private String email;
 	
 	@NotEmpty
-	@Size(min=3,max=10,message="Password must have more than 3 characters and less than 10 characters")
 	private String password;
 	
 	@NotEmpty

@@ -35,11 +35,13 @@ public class SecurityConfig {
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-		http.csrf().disable()
+		http.cors().and()
+		.csrf().disable()
 		.authorizeHttpRequests()
 		.requestMatchers("/api/v1/auth/login").permitAll()
 		.requestMatchers(HttpMethod.GET).permitAll()
 		.requestMatchers(HttpMethod.POST,"/api/users/").permitAll()
+		.requestMatchers(HttpMethod.PUT,"/api/users/change-password").permitAll()
 		.requestMatchers(HttpMethod.POST,"/api/categories/").hasRole("ADMIN")
 		.requestMatchers(HttpMethod.DELETE,"/api/categories/**").hasRole("ADMIN")
 		.requestMatchers(HttpMethod.PUT,"/api/categories/**").hasRole("ADMIN")

@@ -51,15 +51,15 @@ public class User implements UserDetails{
 	private String password;
 	private String about;
 	
-	@OneToMany(mappedBy="user",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="user",cascade=CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
 	@JsonIgnore
 	private List<Post> posts = new ArrayList<>();
 	
-	@OneToMany(mappedBy="commentUser",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="commentUser",cascade=CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
 	@JsonIgnore
 	private List<Comment> comments = new ArrayList<>();
 	
-	@ManyToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
+	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},fetch=FetchType.EAGER)
 	@JoinTable(
 			name="user_role",
 			joinColumns = @JoinColumn(name="user",referencedColumnName = "id"),

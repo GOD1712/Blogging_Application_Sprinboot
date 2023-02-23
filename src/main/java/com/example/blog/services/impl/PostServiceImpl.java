@@ -59,6 +59,7 @@ public class PostServiceImpl implements PostService {
 		existingPost.setContent(postDto.getContent());
 		existingPost.setImageName(postDto.getImageName());
 		existingPost.setAddedDate(new Date());
+		existingPost.setCategory(postDto.getCategory());
 		Post updatedPost = this.postRepo.save(existingPost);
 		return this.modelMapper.map(updatedPost, PostDto.class);
 	}
@@ -110,7 +111,7 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public PostResponse searchPosts(String keyword, Integer pageNumber, Integer pageSize) {
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-		Page<Post> page = this.postRepo.findByTitleContains(keyword,pageable);
+		Page<Post> page = this.postRepo.findByTitleContains(keyword.toLowerCase(),pageable);
 		List<Post> posts = page.getContent();
 		List<PostDto> postDtos = posts.stream().map(post -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
 		PostResponse postResponse = new PostResponse(postDtos,page.getNumber(),page.getSize(),page.getTotalElements(),page.getTotalPages(),page.isLast());

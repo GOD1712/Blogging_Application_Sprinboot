@@ -2,6 +2,7 @@ package com.example.blog.services;
 
 import java.util.List;
 
+import com.example.blog.payloads.PasswordDto;
 import com.example.blog.payloads.UserDto;
 
 public interface UserService {
@@ -10,4 +11,6 @@ public interface UserService {
 	UserDto getUserById(Integer id);
 	List<UserDto> getAllUsers();
 	void deleteUser(Integer id);
+	UserDto getUserByEmail(String email);
+	UserDto changePassword(PasswordDto passwordDto);
 }

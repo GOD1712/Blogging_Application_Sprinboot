@@ -48,7 +48,7 @@ public class Post {
 	@JoinColumn(name="user_id")
 	private User user;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "post", orphanRemoval = true)
 	@JsonIgnore
 	private Set<Comment> comments = new HashSet<>();
 	

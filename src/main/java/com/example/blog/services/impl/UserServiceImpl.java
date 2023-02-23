@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.example.blog.config.AppConstants;
 import com.example.blog.entities.Role;
 import com.example.blog.entities.User;
+import com.example.blog.exceptions.ResNotFoundException;
 import com.example.blog.exceptions.ResourceNotFoundException;
+import com.example.blog.payloads.PasswordDto;
 import com.example.blog.payloads.UserDto;
 import com.example.blog.repositories.RoleRepo;
 import com.example.blog.repositories.UserRepo;
@@ -49,7 +51,8 @@ public class UserServiceImpl implements UserService {
 		existingUser.setAbout(user.getAbout());
 		existingUser.setEmail(user.getEmail());
 		existingUser.setName(user.getName());
-		existingUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
+		existingUser.setPassword(user.getPassword());
+		//existingUser.setPassword(this.passwordEncoder.encode(user.getPassword()));
 		
 		User updatedUser = this.userRepo.save(existingUser);
 		return userToDto(updatedUser);
@@ -82,6 +85,20 @@ public class UserServiceImpl implements UserService {
 	private UserDto userToDto(User user) {
 		UserDto userDto = this.modelMapper.map(user, UserDto.class);
 		return userDto;
+	}
+
+	@Override
+	public UserDto getUserByEmail(String email) {
+		User user = this.userRepo.findByEmail(email).orElseThrow(() -> new ResNotFoundException("User", "email", email));
+		return this.modelMapper.map(user,UserDto.class);
+	}
+
+	@Override
+	public UserDto changePassword(PasswordDto passwordDto) {
+		User user = this.userRepo.findByEmail(passwordDto.getUsername()).orElseThrow(() -> new ResNotFoundException("User", "email", passwordDto.getUsername()));
+		user.setPassword(this.passwordEncoder.encode(passwordDto.getPassword()));
+		User updatedUser = this.userRepo.save(user);
+		return this.modelMapper.map(updatedUser, UserDto.class);
 	}
 	
 }
